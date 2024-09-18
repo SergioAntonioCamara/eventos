@@ -1,15 +1,15 @@
 package com.mindhub.todolist.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 public class Customer {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID customer_id;
     private String name;
     private String lastName;
@@ -19,6 +19,15 @@ public class Customer {
     private short edad;
     private Genero genero;
     private Rol rol;
+
+    @OneToMany(mappedBy = "customer")
+    private List<CustomerEvent> customerEvents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Event> events = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Customer() {
     }
@@ -105,5 +114,39 @@ public class Customer {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    public List<CustomerEvent> getCustomerEvents() {
+        return customerEvents;
+    }
+
+    public void setCustomerEvents(List<CustomerEvent> customerEvents) {
+        this.customerEvents = customerEvents;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public void addEvent(Event event) {
+        events.add(event);
+        event.setOrganizer(this);
+    }
+
+    public void removeEvent(Event event) {
+        events.remove(event);
+        event.setOrganizer(null);
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

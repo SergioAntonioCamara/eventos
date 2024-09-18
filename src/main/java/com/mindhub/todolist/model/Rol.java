@@ -2,5 +2,6 @@ package com.mindhub.todolist.model;
 
 public enum Rol {
     USER,
-    ORGANIZER
+    ORGANIZER,
+    ADMIN
 }

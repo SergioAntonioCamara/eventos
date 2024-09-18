@@ -7,11 +7,11 @@ import java.util.UUID;
 @Entity
 public class CustomerEvent {
     @Id
-    @GeneratedValue
-    private UUID userEvent_id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID user_id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToOne
@@ -21,33 +21,37 @@ public class CustomerEvent {
     public CustomerEvent() {
     }
 
-    public CustomerEvent(UUID userEvent_id, Customer customer, Event event) {
-        this.userEvent_id = userEvent_id;
+    public CustomerEvent(Customer customer, Event event) { //no coloco user_id porque se genera automáticamente
         this.customer = customer;
         this.event = event;
     }
 
-    public UUID getUserEvent_id() {
-        return userEvent_id;
+    // Getters y Setters
+    public UUID getUser_id() {
+        return user_id;
     }
 
-    public void setUserEvent_id(UUID userEvent_id) {
-        this.userEvent_id = userEvent_id;
+    public void setUser_id(UUID user_id) {
+        this.user_id = user_id;
     }
 
     public Customer getCustomer() {
+
         return customer;
     }
 
     public void setCustomer(Customer customer) {
+
         this.customer = customer;
     }
 
     public Event getEvent() {
+
         return event;
     }
 
     public void setEvent(Event event) {
+
         this.event = event;
     }
 

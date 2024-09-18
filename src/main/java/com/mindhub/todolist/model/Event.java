@@ -11,7 +11,7 @@ public class Event {
     private UUID event_id;
 
     @ManyToOne
-    @JoinColumn(name = "organizer_id")
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer organizer;
 
     private String desc;
@@ -32,22 +32,27 @@ public class Event {
     }
 
     public UUID getEvent_id() {
+
         return event_id;
     }
 
     public void setEvent_id(UUID event_id) {
+
         this.event_id = event_id;
     }
 
     public Customer getOrganizer() {
+
         return organizer;
     }
 
     public void setOrganizer(Customer organizer) {
+
         this.organizer = organizer;
     }
 
     public String getDesc() {
+
         return desc;
     }
 
@@ -56,6 +61,7 @@ public class Event {
     }
 
     public String getImg() {
+
         return img;
     }
 
