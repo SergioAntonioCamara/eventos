@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import java.time.LocalDate;
 @Entity
 public class EventLocation {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID eventLocation_id;
 
     @ManyToOne
@@ -19,6 +20,9 @@ public class EventLocation {
     @ManyToOne
     @JoinColumn(name = "location_id")
     private Location location;
+
+    @OneToMany(mappedBy = "eventLocation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CustomerEvent> customerEvents; //representa todos los eventos de cliente asociados con una ubicación de evento.
 
     @Temporal(TemporalType.DATE)
     private LocalDate date;
@@ -74,6 +78,14 @@ public class EventLocation {
 
     public void setAssistance(int assistance) {
         this.assistance = assistance;
+    }
+
+    public List<CustomerEvent> getCustomerEvents() {
+        return customerEvents;
+    }
+
+    public void setCustomerEvents(List<CustomerEvent> customerEvents) {
+        this.customerEvents = customerEvents;
     }
 
 }

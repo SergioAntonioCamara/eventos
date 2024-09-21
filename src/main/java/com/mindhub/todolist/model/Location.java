@@ -1,16 +1,19 @@
 package com.mindhub.todolist.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 public class Location {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID location_id;
+
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true) //cascade = CascadeType.ALL, orphanRemoval = true: maneja automáticamente la persistencia de ubicaciones de eventos y la eliminación de ubicaciones huérfanas.
+    private List<EventLocation> eventLocations = new ArrayList<>();
 
     private String name;
     private String location;
@@ -69,4 +72,23 @@ public class Location {
     public void setImg(String img) {
         this.img = img;
     }
+
+    public List<EventLocation> getEventLocations() {
+        return eventLocations;
+    }
+
+    public void setEventLocations(List<EventLocation> eventLocations) {
+        this.eventLocations = eventLocations;
+    }
+/* INICA: Cuando se agrega o elimina una ubicación de evento, la ubicación se actualiza en el EventLocation Y Location */
+    public void addEventLocation(EventLocation eventLocation) {
+        eventLocations.add(eventLocation);
+        eventLocation.setLocation(this);
+    }
+
+    public void removeEventLocation(EventLocation eventLocation) {
+        eventLocations.remove(eventLocation);
+        eventLocation.setLocation(null);
+    }
+    /* TERMINA: Cuando se agrega o elimina una ubicación de evento, la ubicación se actualiza en el EventLocation Y Location*/
 }

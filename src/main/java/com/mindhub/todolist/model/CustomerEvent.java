@@ -15,15 +15,15 @@ public class CustomerEvent {
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @JoinColumn(name = "eventLocation_id", nullable = false)
+    private EventLocation eventLocation;
 
     public CustomerEvent() {
     }
 
-    public CustomerEvent(Customer customer, Event event) { //no coloco user_id porque se genera automáticamente
+    public CustomerEvent(Customer customer, EventLocation eventLocation) { //no coloco user_id porque se genera automáticamente
         this.customer = customer;
-        this.event = event;
+        this.eventLocation = eventLocation;
     }
 
     // Getters y Setters
@@ -44,15 +44,12 @@ public class CustomerEvent {
 
         this.customer = customer;
     }
-
-    public Event getEvent() {
-
-        return event;
+    public EventLocation getEventLocation() {
+        return eventLocation;
     }
 
-    public void setEvent(Event event) {
-
-        this.event = event;
+    public void setEventLocation(EventLocation eventLocation) {
+        this.eventLocation = eventLocation;
     }
 
 }
