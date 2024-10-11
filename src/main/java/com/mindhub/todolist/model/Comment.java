@@ -7,7 +7,7 @@ import java.util.UUID;
 @Entity
 public class Comment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID comment_id;
 
     @ManyToOne

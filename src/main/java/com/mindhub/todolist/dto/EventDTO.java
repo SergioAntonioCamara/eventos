@@ -1,39 +1,31 @@
-/*package com.mindhub.todolist.dto;
+package com.mindhub.todolist.dto;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class EventDTO {
-    private UUID eventId;
+    private UUID id;
     private String name;
-    private String desc;
-    private String img;
-    private short ageReq;
-    private String organizerName;
+    private String date;
     private String location;
-    private LocalDateTime eventDate;
+    private int availableSlots;
 
-    // Constructor sin parámetros
-    public EventDTO() {
-    }
-
-    // Constructor con parámetros
-    public EventDTO(UUID eventId, String name, String desc, String img, short ageReq, String organizerName, String location, LocalDateTime eventDate) {
-        this.eventId = eventId;
+    // Constructor
+    public EventDTO(UUID id, String name, String date, String location, int availableSlots) {
+        this.id = id;
         this.name = name;
-        this.desc = desc;
-        this.img = img;
-        this.ageReq = ageReq;
-        this.organizerName = organizerName;
+        this.date = date;
         this.location = location;
-        this.eventDate = eventDate;
+        this.availableSlots = availableSlots;
     }
 
     // Getters y Setters
-
-    public UUID getEventId() {
-        return eventId;
+    public UUID getId() {
+        return id;
     }
 
-    public void setEventId(UUID eventId) {
-        this.eventId = eventId;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -44,36 +36,12 @@ public class EventDTO {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDate() {
+        return date;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public short getAgeReq() {
-        return ageReq;
-    }
-
-    public void setAgeReq(short ageReq) {
-        this.ageReq = ageReq;
-    }
-
-    public String getOrganizerName() {
-        return organizerName;
-    }
-
-    public void setOrganizerName(String organizerName) {
-        this.organizerName = organizerName;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getLocation() {
@@ -84,12 +52,11 @@ public class EventDTO {
         this.location = location;
     }
 
-    public LocalDateTime getEventDate() {
-        return eventDate;
+    public int getAvailableSlots() {
+        return availableSlots;
     }
 
-    public void setEventDate(LocalDateTime eventDate) {
-        this.eventDate = eventDate;
+    public void setAvailableSlots(int availableSlots) {
+        this.availableSlots = availableSlots;
     }
 }
-*/

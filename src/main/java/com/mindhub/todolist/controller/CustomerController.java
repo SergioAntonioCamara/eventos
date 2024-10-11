@@ -1,36 +1,61 @@
-/*package com.mindhub.todolist.controller;
-
-import com.mindhub.todolist.dto.CustomerDTO;
+package com.mindhub.todolist.controller;
+import com.mindhub.todolist.dto.UserRegistrationDTO;
+import com.mindhub.todolist.model.Customer;
+import com.mindhub.todolist.repository.CustomerRepository;
+import com.mindhub.todolist.service.CustomerService;
+import com.mindhub.todolist.dto.CustomerBasicDTO;
+import com.mindhub.todolist.dto.CustomerDetailsDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/api/customers")
 public class CustomerController {
-    private final CustomerService customerService;
+
+    private CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody CustomerDTO customerDTO) {
-        customerService.register(customerDTO);
-        return ResponseEntity.ok("Usuario registrado con éxito.");
+    @GetMapping("/basic")
+    public List<CustomerBasicDTO> getAllCustomersBasic() {
+        return customerService.getAllCustomersBasic();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginDTO loginDTO) {
-        boolean success = customerService.login(loginDTO);
-        if (success) {
-            return ResponseEntity.ok("Inicio de sesión exitoso.");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error en las credenciales.");
+    @GetMapping("/{customerId}")
+    public CustomerDetailsDTO getCustomerDetails(@PathVariable UUID customerId) {
+        return customerService.getCustomerDetailsById(customerId);
+    }
+
+    /*@PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDTO userRegistrationDTO) {
+        try {
+            Customer customer = customerService.registerUser(userRegistrationDTO);
+            return ResponseEntity.ok("Usuario registrado exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }*/
+
+    @PostMapping("/register")
+    public ResponseEntity<Customer> registerUser(@RequestBody UserRegistrationDTO userRegistrationDTO) {
+        try {
+            Customer customer = customerService.registerUser(userRegistrationDTO);
+            return ResponseEntity.ok(customer);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @PutMapping("/{customerId}/password")
+    public ResponseEntity<Void> updatePassword(@PathVariable UUID customerId, @RequestBody String newPassword) {
+        customerService.updatePassword(customerId, newPassword);
+        return ResponseEntity.ok().build(); // Tendría que devolverme un estado 200 OK, contraseña cambiada.
+    }
 }
-*/

@@ -1,13 +1,17 @@
 package com.mindhub.todolist.model;
 
+import aj.org.objectweb.asm.commons.GeneratorAdapter;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.mindhub.todolist.model.Rol.*;
+
 @Entity
 public class Customer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID customer_id;
@@ -17,8 +21,13 @@ public class Customer {
     private boolean activated;
     private String password;
     private short edad;
+
     private Genero genero;
+    @Enumerated(EnumType.STRING)
     private Rol rol;
+    public static Rol getRolFromString(String rol) {
+        return Rol.valueOf(rol.toUpperCase());
+    }
 
     @OneToMany(mappedBy = "customer")
     private List<CustomerEvent> customerEvents = new ArrayList<>();
@@ -42,6 +51,14 @@ public class Customer {
         this.edad = edad;
         this.genero = genero;
         this.rol = rol;
+    }
+
+    public Customer(String email, String name, String password, Rol rol) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.rol = rol;
+        this.activated = false;
     }
 
     public UUID getCustomer_id() {
