@@ -1,6 +1,7 @@
 package com.mindhub.todolist.service;
 
 import com.mindhub.todolist.model.Customer;
+import com.mindhub.todolist.model.CustomerDetails;
 import com.mindhub.todolist.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,6 @@ public class CustomerDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("el mail" + email + "no existe en la base de datos"));
-        return customer;
+        return new CustomerDetails(customer);
     }
 }

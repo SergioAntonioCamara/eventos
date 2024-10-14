@@ -1,12 +1,15 @@
 package com.mindhub.todolist.security;
 
+import com.mindhub.todolist.service.CustomerDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +23,13 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+    private CustomerDetailsService customerDetailsService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     private JwtTokenProvider jwtTokenProvider;
 
@@ -27,17 +37,7 @@ public class SecurityConfig {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,12 +45,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/index.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/crearevento").hasAnyAuthority("ADMIN", "ORGANIZER")
+                        .requestMatchers(HttpMethod.POST, "/api/events/create").hasAnyAuthority("ADMIN", "ORGANIZER") // Solo organizadores pueden crear eventos y administradores por supuesto.
                         .requestMatchers("/api/events").hasAuthority("USER")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/customers/").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+
                 .csrf(csrf -> csrf.disable())
                 .formLogin(formLogin -> {
                     formLogin.loginPage("/index.html")
@@ -59,16 +60,23 @@ public class SecurityConfig {
                             .passwordParameter("password")
                             .permitAll()
                             .successHandler((request, response, authentication) -> clearAuthenticationAttributes(request))
-                            .failureHandler((request, response, exception) -> response.sendError(401, "Invalid user or password"));
+                            .failureHandler((request, response, exception) -> response.sendError(401, "Usuario o contraeña inválido"));
                 })
                 .logout(logout ->
                         logout.logoutUrl("/api/logout")
                                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
                                 .deleteCookies("JSESSIONID"))
-                .rememberMe(Customizer.withDefaults());
+                .rememberMe(rememberMe ->
+                        rememberMe.userDetailsService(customerDetailsService));
 
         return http.build();
     }
+
+    // aquí se configura el UserDetailsService y el codificador de contraseñas
+    /*@Autowired
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customerDetailsService).passwordEncoder(passwordEncoder());
+    }*/
 
     private void clearAuthenticationAttributes(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

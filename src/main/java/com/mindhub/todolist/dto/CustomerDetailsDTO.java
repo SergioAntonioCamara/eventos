@@ -1,5 +1,7 @@
 package com.mindhub.todolist.dto;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.UUID;
 
 public class CustomerDetailsDTO {

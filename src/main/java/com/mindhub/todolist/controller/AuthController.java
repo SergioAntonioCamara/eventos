@@ -29,6 +29,12 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    //Para evitar referencia circular, lo inyecto a través del constructor.
+    //que ahora será el bean gestionado por Spring
+    public AuthController(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
